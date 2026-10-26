@@ -1,3 +1,4 @@
 Flask>=3.1,<4
 Werkzeug>=3.1,<4
 gunicorn>=23,<27
+python-dotenv>=1.0,<2

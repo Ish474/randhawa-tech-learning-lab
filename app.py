@@ -11,12 +11,14 @@ from collections import defaultdict, deque
 from datetime import datetime, timezone
 from pathlib import Path
 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_file, send_from_directory, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 
 BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 DB_PATH = Path(os.getenv("NULLSPACE_DB", BASE_DIR / "instance" / "nullspace.sqlite3"))
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 MEDIA_DIR = DB_PATH.parent / "media"
