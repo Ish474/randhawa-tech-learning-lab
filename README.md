@@ -31,13 +31,17 @@ Connect this repository to Render and choose **New Blueprint**. Render will read
 
 Set the `OTP_SMTP_*` variables for email delivery. Set `OTP_DEV_MODE=1` only for local testing; it displays the generated code in the response and browser instead of sending it. Never enable that mode on a public deployment.
 
+For billing, set `PAYTM_MERCHANT_ID`, `PAYTM_MERCHANT_KEY`, `PAYTM_WEBSITE`, `PAYTM_API_BASE`, and `NULLSPACE_PUBLIC_ORIGIN`. Paytm merchant credentials are required before real payments can be collected.
+
 ## Course Management
 
 Sign in as the master admin and open **Admin console**. Courses and modules are stored in SQLite, so an admin can create, edit, publish, unpublish, or delete them. Module edits include the lesson explanation, example code, practice task, checkpoint content, answer choices, hint, and game mode.
 
 Use **Generate fresh questions** on a course to create content-aware, module-specific questions from the title, explanation, code, task, steps, and answer choices. It works locally by default; setting `OPENAI_API_KEY` enables richer AI-generated variants on the server without exposing the key to browsers.
 
-Available game modes are **Duel**, **Boss battle**, **Speed race**, and **Base defense**. Correct answers damage the opponent and advance to the next round; incorrect answers show the explanation, damage the player, and then advance automatically.
+Each learning path now contains twelve guided rooms covering foundations, practice, debugging, testing, deployment, and the next concepts needed to continue. New learners receive four free completed rooms. After the trial, one course can be unlocked for INR 199 through the optional Paytm integration. If Paytm credentials are not configured, the site shows the teacher contact route instead.
+
+The language selector provides Hindi YouTube recommendations for each course. Teacher help is available at `ayaanrandhawa@gmail.com` and WhatsApp `+91 9335430276`.
 
 ## Security and Ownership
 
@@ -45,4 +49,4 @@ Mutating API requests require a session-bound CSRF token. Authentication and API
 
 The configured master admin controls site identity, copyright, logo, approved media, courses, modules, publishing, and game modes from **Admin console**. Arbitrary code/file uploads are intentionally not allowed because that would turn the admin panel into a remote-code-execution surface.
 
-The terminal and fighting games are intentionally simulated in the browser. For public use, deploy behind HTTPS with Gunicorn or another production WSGI server, configure SMTP, use database backups, move rate limiting to Redis/proxy infrastructure, add audit logs and upload malware scanning, and never expose development OTP codes.
+The terminal is intentionally simulated in the browser. For public use, deploy behind HTTPS with Gunicorn or another production WSGI server, configure SMTP and Paytm, use database backups, move rate limiting to Redis/proxy infrastructure, add audit logs and upload malware scanning, and never expose development OTP codes.

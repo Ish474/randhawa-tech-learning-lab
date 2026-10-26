@@ -35,3 +35,13 @@ services:
         sync: false
       - key: OTP_SMTP_FROM
         sync: false
+      - key: PAYTM_MERCHANT_ID
+        sync: false
+      - key: PAYTM_MERCHANT_KEY
+        sync: false
+      - key: PAYTM_WEBSITE
+        value: DEFAULT
+      - key: PAYTM_API_BASE
+        value: https://securegw.paytm.in
+      - key: NULLSPACE_PUBLIC_ORIGIN
+        value: https://randhawa-tech-learning-lab.onrender.com

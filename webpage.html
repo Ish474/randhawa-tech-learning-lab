@@ -330,6 +330,12 @@
         .user-actions { display: flex; gap: 5px; margin-left: auto; }
         .user-actions button { padding: 5px 7px; color: #596fdb; background: #edf0ff; border: 0; border-radius: 6px; font: 800 8px var(--mono); cursor: pointer; }
         .user-actions button.danger { color: #c54d4d; background: #fff0ef; }
+        .language-select { padding: 7px 8px; color: #aeb8c7; background: transparent; border: 1px solid var(--line); border-radius: 7px; font: 9px var(--mono); }
+        .newcomer-card { display: grid; gap: 10px; padding: 18px 20px; }
+        .newcomer-card h3 { font-size: 17px; }
+        .newcomer-card p { color: #8290a3; font-size: 11px; line-height: 1.6; }
+        .contact-links { display: flex; flex-wrap: wrap; gap: 8px; }
+        .contact-links a { padding: 9px 11px; color: #176e68; background: #e6faf6; border-radius: 8px; font: 800 9px var(--mono); }
         .auth-overlay.open { display: grid; }
         .auth-card { width: min(440px, 100%); padding: 25px; background: #111a27; border: 1px solid rgba(114,228,213,.28); border-radius: 8px; box-shadow: 0 20px 80px rgba(0,0,0,.45); }
         .auth-card h2 { margin-top: 9px; font-size: 25px; letter-spacing: -.05em; }
@@ -682,7 +688,7 @@
                 <div class="topbar-actions">
                     <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="searchInput" type="search" placeholder="Search modules, rooms..." aria-label="Search modules"><button class="search-submit" id="searchButton" type="button" aria-label="Search">↵</button></label>
                     <div class="notification-wrap"><button class="icon-button" id="notificationButton" type="button" aria-label="Open notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><i class="notification-dot"></i></button><div class="notification-panel" id="notificationPanel"><h3>Notifications</h3><p>Recent activity from your learning workspace.</p><div class="notification-item"><strong>New room unlocked</strong><span>Pointer Patrol is ready in the C / C++ path.</span></div><div class="notification-item"><strong>Streak protected</strong><span>You have practiced seven days in a row.</span></div><div class="notification-item"><strong>Briefing updated</strong><span>Today's focus is reading request headers.</span></div><button id="markNotifications" type="button">Mark all as read</button></div></div>
-                    <button class="main-profile" id="profileButton" type="button"><div class="avatar">IR</div><span>Sign in</span></button>
+                    <select class="language-select" id="languageSelect" aria-label="Learning language"><option value="en">English</option><option value="hi">हिन्दी</option></select><button class="main-profile" id="profileButton" type="button"><div class="avatar">IR</div><span>Sign in</span></button>
                 </div>
             </header>
 
@@ -707,10 +713,11 @@
                         <article class="panel track-card" data-course="java" role="button" tabindex="0"><div class="track-icon web"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v16H7z"/><path d="M10 7h4M10 11h4M10 15h2"/></svg></div><h3>Java</h3><p>Write systems that survive the real world.</p><div class="track-meta"><span>05 STARTER MODULES</span><b>16%</b></div></article>
                         <article class="panel track-card" data-course="reverse" role="button" tabindex="0"><div class="track-icon linux"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 4l-4 16"/></svg></div><h3>C / C++ foundations</h3><p>Write clear programs. Understand every layer.</p><div class="track-meta"><span>05 STARTER MODULES</span><b>03%</b></div></article>
                     </div>
-                    <div class="lower-grid">
-                        <article class="panel challenge-card"><div class="panel-title"><span>Active challenges</span><a href="#arena" data-view-link="arena">Open arena ↗</a></div><div class="challenge-list"><button class="challenge-row" data-toast="Room loaded: The First Payload"><i class="challenge-status live"></i><span class="challenge-copy"><strong>The First Payload</strong><span>WEB / BEGINNER / 15 MIN</span></span><b class="difficulty medium">IN PROGRESS</b><span class="challenge-arrow">›</span></button><button class="challenge-row" data-toast="Room loaded: Permission Denied"><i class="challenge-status"></i><span class="challenge-copy"><strong>Permission Denied</strong><span>LINUX / BEGINNER / 20 MIN</span></span><b class="difficulty">START</b><span class="challenge-arrow">›</span></button><button class="challenge-row" data-toast="Room loaded: Pointer Patrol"><i class="challenge-status done"></i><span class="challenge-copy"><strong>Pointer Patrol</strong><span>C / C++ / EASY</span></span><b class="difficulty">COMPLETED</b><span class="challenge-arrow">›</span></button></div></article>
-                        <article class="panel terminal-card"><div class="terminal-head"><div class="panel-title"><span>Sandbox / shell</span></div><span class="terminal-label">INSTANCE: NS-042</span></div><div class="terminal"><div class="terminal-line"><span class="prompt">is@nullspace:~$</span><span class="command">whoami</span></div><div class="output">operator_ishaan</div><div class="terminal-line"><span class="prompt">is@nullspace:~$</span><span class="command">ls</span></div><div class="output">challenges&nbsp;&nbsp; notes&nbsp;&nbsp; tools&nbsp;&nbsp; welcome.txt</div><div class="terminal-input"><span class="prompt">is@nullspace:~$</span><input id="terminalInput" type="text" placeholder="try: help" autocomplete="off" aria-label="Sandbox command"><button class="terminal-run" id="runTerminal">run</button></div><div class="terminal-note">Browser simulation. No access to your machine.</div></div></article>
-                    </div>
+                     <div class="lower-grid">
+                         <article class="panel challenge-card"><div class="panel-title"><span>Active challenges</span><a href="#arena" data-view-link="arena">Open arena ↗</a></div><div class="challenge-list"><button class="challenge-row" data-toast="Room loaded: The First Payload"><i class="challenge-status live"></i><span class="challenge-copy"><strong>The First Payload</strong><span>WEB / BEGINNER / 15 MIN</span></span><b class="difficulty medium">IN PROGRESS</b><span class="challenge-arrow">›</span></button><button class="challenge-row" data-toast="Room loaded: Permission Denied"><i class="challenge-status"></i><span class="challenge-copy"><strong>Permission Denied</strong><span>LINUX / BEGINNER / 20 MIN</span></span><b class="difficulty">START</b><span class="challenge-arrow">›</span></button><button class="challenge-row" data-toast="Room loaded: Pointer Patrol"><i class="challenge-status done"></i><span class="challenge-copy"><strong>Pointer Patrol</strong><span>C / C++ / EASY</span></span><b class="difficulty">COMPLETED</b><span class="challenge-arrow">›</span></button></div></article>
+                         <article class="panel terminal-card"><div class="terminal-head"><div class="panel-title"><span>Sandbox / shell</span></div><span class="terminal-label">INSTANCE: NS-042</span></div><div class="terminal"><div class="terminal-line"><span class="prompt">is@nullspace:~$</span><span class="command">whoami</span></div><div class="output">operator_ishaan</div><div class="terminal-line"><span class="prompt">is@nullspace:~$</span><span class="command">ls</span></div><div class="output">challenges&nbsp;&nbsp; notes&nbsp;&nbsp; tools&nbsp;&nbsp; welcome.txt</div><div class="terminal-input"><span class="prompt">is@nullspace:~$</span><input id="terminalInput" type="text" placeholder="try: help" autocomplete="off" aria-label="Sandbox command"><button class="terminal-run" id="runTerminal">run</button></div><div class="terminal-note">Browser simulation. No access to your machine.</div></div></article>
+                     </div>
+                     <article class="panel newcomer-card"><span class="eyebrow">New operator help</span><h3>Need a human guide?</h3><p>Try four rooms for free. After that, unlock one full course for ₹199 or contact Ayaan for teacher guidance.</p><div class="contact-links"><a href="mailto:ayaanrandhawa@gmail.com">Email Ayaan</a><a href="https://wa.me/919335430276?text=Hi%20Ayaan%2C%20I%20need%20help%20with%20the%20learning%20lab." target="_blank" rel="noopener">WhatsApp Ayaan</a></div></article>
                 </section>
 
                 <section class="view simple-view" id="paths"><div class="path-library-head"><div><p class="eyebrow">Learning paths / 06 routes</p><h2>Choose a skill surface.</h2><p>Every route starts with plain language and ends with a small, safe build.</p></div><span class="date-pill">OPEN A COURSE TO BEGIN</span></div><div class="path-library-grid" id="pathLibrary"></div></section>
@@ -758,8 +765,7 @@
                                 <label>Correct answer<input id="adminModuleAnswer"></label>
                                 <label>Answer choices, one per line<textarea id="adminModuleAnswers"></textarea></label>
                                 <label>Hint<input id="adminModuleHint"></label>
-                                <label>Question type<select id="adminModuleQuestionType"><option value="choice">Direct choice</option><option value="code">Code prediction</option><option value="sequence">Order the steps</option><option value="debug">Debug the flaw</option><option value="match">Match the concept</option></select></label>
-                                <label>Game mode<select id="adminModuleGameMode"><option value="duel">Duel</option><option value="boss">Boss battle</option><option value="race">Speed race</option><option value="defense">Base defense</option></select></label>
+                                 <label>Question type<select id="adminModuleQuestionType"><option value="choice">Direct choice</option><option value="code">Code prediction</option><option value="sequence">Order the steps</option><option value="debug">Debug the flaw</option><option value="match">Match the concept</option></select></label>
                             </div>
                             <div class="admin-editor-actions"><span class="terminal-label" id="adminModuleFeedback">MODULE READY</span><button class="primary-button" id="saveAdminModule" type="button">Save module</button><button class="danger-button" id="deleteAdminModule" type="button">Delete module</button></div>
                         </form>
@@ -786,7 +792,8 @@
         <article class="briefing-card"><p class="eyebrow">Daily briefing / 25 OCT 2026</p><h2>Read the request before you touch the tool.</h2><p>Today's short mission is to build the habit that makes every later security lesson easier: observe the request, name the important fields, then predict the response.</p><div class="briefing-list"><div>01 / Read a GET request and identify its path.</div><div>02 / Explain what a status code tells the client.</div><div>03 / Open the checkpoint and answer in your own words.</div></div><div class="briefing-actions"><button class="secondary-button" id="closeBriefing" type="button">Close briefing</button><button class="primary-button" id="startBriefing" type="button">Start mission →</button></div></article>
     </div>
     <div class="assistant-widget" id="assistantWidget"><div class="assistant-panel" id="assistantPanel"><div class="assistant-head"><strong>Nova / learning assistant</strong><span>LOCAL GUIDE</span></div><div class="assistant-messages" id="assistantMessages"><div class="assistant-message">Ask me to explain the current room, give a hint, or suggest the next step. I use the lesson content already loaded in this page.</div></div><form class="assistant-form" id="assistantForm"><input id="assistantInput" type="text" placeholder="Ask about this room..." autocomplete="off"><button type="submit">send</button></form></div><button class="assistant-toggle" id="assistantToggle" type="button">Ask Nova</button></div>
-    <div class="auth-overlay" id="authOverlay" aria-hidden="true"><article class="auth-card"><button class="auth-close" id="closeAuth" type="button" aria-label="Close sign in">×</button><p class="eyebrow">Randhawa's identity / secure access</p><h2>Enter the operator network.</h2><div class="auth-tabs"><button class="auth-tab active" data-auth-tab="login" type="button">Sign in</button><button class="auth-tab" data-auth-tab="register" type="button">Create account</button></div><form class="auth-form" id="loginForm"><label>Email<input id="loginEmail" type="email" autocomplete="email" required></label><label>Password<div class="password-field"><input id="loginPassword" type="password" autocomplete="current-password" required><button type="button" data-toggle-password="loginPassword">Show</button></div></label><button class="primary-button" type="submit">Sign in →</button></form><form class="auth-form" id="registerForm" style="display:none"><label>Username<input id="registerUsername" type="text" autocomplete="username" required></label><label>Email<input id="registerEmail" type="email" autocomplete="email" required></label><div class="otp-actions"><label>Email code<input id="registerEmailOtp" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><button id="requestEmailOtp" type="button">Send code</button><span class="otp-status" id="emailOtpStatus"></span></div><label>Password<div class="password-field"><input id="registerPassword" type="password" autocomplete="new-password" minlength="10" required><button type="button" data-toggle-password="registerPassword">Show</button></div></label><button class="primary-button" type="submit">Create operator →</button></form><div class="auth-status" id="authStatus"></div></article></div>
+     <div class="auth-overlay" id="authOverlay" aria-hidden="true"><article class="auth-card"><button class="auth-close" id="closeAuth" type="button" aria-label="Close sign in">×</button><p class="eyebrow">Randhawa's identity / secure access</p><h2>Enter the operator network.</h2><div class="auth-tabs"><button class="auth-tab active" data-auth-tab="login" type="button">Sign in</button><button class="auth-tab" data-auth-tab="register" type="button">Create account</button></div><form class="auth-form" id="loginForm"><label>Email<input id="loginEmail" type="email" autocomplete="email" required></label><label>Password<div class="password-field"><input id="loginPassword" type="password" autocomplete="current-password" required><button type="button" data-toggle-password="loginPassword">Show</button></div></label><button class="primary-button" type="submit">Sign in →</button></form><form class="auth-form" id="registerForm" style="display:none"><label>Username<input id="registerUsername" type="text" autocomplete="username" required></label><label>Email<input id="registerEmail" type="email" autocomplete="email" required></label><div class="otp-actions"><label>Email code<input id="registerEmailOtp" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><button id="requestEmailOtp" type="button">Send code</button><span class="otp-status" id="emailOtpStatus"></span></div><label>Password<div class="password-field"><input id="registerPassword" type="password" autocomplete="new-password" minlength="10" required><button type="button" data-toggle-password="registerPassword">Show</button></div></label><button class="primary-button" type="submit">Create operator →</button></form><div class="auth-status" id="authStatus"></div></article></div>
+     <div class="briefing-overlay" id="accessOverlay" aria-hidden="true"><article class="briefing-card"><p class="eyebrow">Course access / 4-room trial complete</p><h2>Choose how you want to continue.</h2><p>Unlock one full course for ₹199 through Paytm, or contact Ayaan for teacher guidance.</p><div class="briefing-actions"><button class="secondary-button" id="closeAccess" type="button">Keep exploring</button><button class="primary-button" id="payCourseButton" type="button">Unlock for ₹199 →</button></div><div class="contact-links"><a href="mailto:ayaanrandhawa@gmail.com">Email teacher</a><a href="https://wa.me/919335430276?text=Hi%20Ayaan%2C%20I%20want%20teacher%20guidance." target="_blank" rel="noopener">WhatsApp teacher</a></div><div class="auth-status" id="accessStatus"></div></article></div>
     <div class="toast" id="toast" role="status"></div>
     <script>
         const toast = document.getElementById('toast');
@@ -980,6 +987,17 @@
         let activeCourse;
         let activeLesson = 0;
         const completedRooms = new Set();
+        const unlockedCourses = new Set();
+        let pendingCourseId = null;
+        let preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
+        const hindiRecommendations = {
+            python: 'https://www.youtube.com/results?search_query=Python+tutorial+Hindi+beginners',
+            web: 'https://www.youtube.com/results?search_query=HTML+CSS+JavaScript+tutorial+Hindi',
+            linux: 'https://www.youtube.com/results?search_query=Linux+course+Hindi+beginners',
+            security: 'https://www.youtube.com/results?search_query=cybersecurity+course+Hindi+beginners',
+            java: 'https://www.youtube.com/results?search_query=Java+course+Hindi+beginners',
+            reverse: 'https://www.youtube.com/results?search_query=C+C%2B%2B+course+Hindi+beginners',
+        };
 
         function renderDashboard() {
             const user = sessionUser;
@@ -1059,6 +1077,7 @@
                     <span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.time)} / CONCEPT + PRACTICE</small></span>
                     <span class="lesson-state">${completedRooms.has(`${course.id}-${itemIndex}`) ? 'DONE' : itemIndex === index ? 'OPEN' : 'VIEW'}</span>
                 </button>`).join('');
+            const hindiResource = preferredLanguage === 'hi' ? `<a class="resource-link" href="${hindiRecommendations[course.id]}" target="_blank" rel="noopener"><span>Hindi audio/video recommendation</span><b class="resource-type">YouTube हिन्दी ↗</b></a>` : '';
             lessonDetail.innerHTML = `
                 <p class="eyebrow">Room ${String(index + 1).padStart(2, '0')} / Guided lab</p>
                 <h3>${escapeHtml(lesson.title)}</h3>
@@ -1073,11 +1092,12 @@
                 <h4>Try it yourself</h4>
                 <p class="task">${escapeHtml(lesson.task)}</p>
                 <div class="checkpoint"><span class="checkpoint-label">Checkpoint / prove the idea</span><p>${escapeHtml(room.question)}</p><div class="checkpoint-controls"><input id="checkpointInput" type="text" placeholder="Type your answer" autocomplete="off" aria-label="Checkpoint answer"><button type="button" id="checkCheckpoint">Check</button><button type="button" id="showHint">Hint</button></div><div class="checkpoint-feedback" id="checkpointFeedback"></div><div class="hint" id="checkpointHint"><strong>Hint 1:</strong> ${escapeHtml(room.hint)}<span class="hint-detail"><strong>Hint 2:</strong> Re-read the outcome above and focus on this first move: ${escapeHtml(room.steps[0])}</span></div></div>
-                <h4>Keep learning</h4>
-                <div class="resource-list">
-                    <a class="resource-link" href="${course.video}" target="_blank" rel="noopener"><span>${escapeHtml(course.videoTitle)}</span><b class="resource-type">YouTube ↗</b></a>
-                    <a class="resource-link" href="${course.web}" target="_blank" rel="noopener"><span>${escapeHtml(course.webTitle)}</span><b class="resource-type">Web guide ↗</b></a>
-                </div>
+                 <h4>Keep learning</h4>
+                 <div class="resource-list">
+                     <a class="resource-link" href="${course.video}" target="_blank" rel="noopener"><span>${escapeHtml(course.videoTitle)}</span><b class="resource-type">YouTube ↗</b></a>
+                     <a class="resource-link" href="${course.web}" target="_blank" rel="noopener"><span>${escapeHtml(course.webTitle)}</span><b class="resource-type">Web guide ↗</b></a>
+                     ${hindiResource}
+                 </div>
                 <div class="drawer-actions"><button class="secondary-button${completedRooms.has(roomKey) ? ' room-complete' : ''}" type="button" id="markLesson">${completedRooms.has(roomKey) ? 'Room completed' : 'Mark room complete'}</button><button class="secondary-button" type="button" id="resetLesson">Reset progress</button><button class="primary-button" type="button" id="nextLesson">${index === course.modules.length - 1 ? 'Finish path' : 'Next module →'}</button></div>`;
             lessonList.querySelectorAll('[data-lesson-index]').forEach(item => item.addEventListener('click', () => renderLesson(course, Number(item.dataset.lessonIndex))));
             document.getElementById('showHint').addEventListener('click', () => document.getElementById('checkpointHint').classList.toggle('show'));
@@ -1109,6 +1129,13 @@
             const course = courses[courseId];
             if (!course) return;
             if (!course.modules?.length) { showToast('This course has no modules yet'); return; }
+            if (sessionUser && completedRooms.size >= 4 && !unlockedCourses.has(courseId) && !completedRooms.has(`${courseId}-${moduleIndex}`)) {
+                pendingCourseId = courseId;
+                document.getElementById('accessStatus').textContent = '';
+                document.getElementById('accessOverlay').classList.add('open');
+                document.getElementById('accessOverlay').setAttribute('aria-hidden', 'false');
+                return;
+            }
             activeCourse = course;
             renderLesson(course, Math.max(0, Math.min(moduleIndex, course.modules.length - 1)));
             overlay.setAttribute('aria-hidden', 'false');
@@ -1154,6 +1181,35 @@
         document.getElementById('closeDrawer').addEventListener('click', closeCourse);
         overlay.addEventListener('click', event => { if (event.target === overlay) closeCourse(); });
         document.addEventListener('keydown', event => { if (event.key === 'Escape' && overlay.classList.contains('open')) closeCourse(); });
+        document.getElementById('languageSelect').value = preferredLanguage;
+        document.getElementById('languageSelect').addEventListener('change', event => {
+            preferredLanguage = event.target.value;
+            localStorage.setItem('preferredLanguage', preferredLanguage);
+            document.documentElement.lang = preferredLanguage;
+            if (activeCourse) renderLesson(activeCourse, activeLesson);
+            showToast(preferredLanguage === 'hi' ? 'Hindi YouTube recommendations enabled' : 'English resources enabled');
+        });
+        function closeAccessPrompt() {
+            document.getElementById('accessOverlay').classList.remove('open');
+            document.getElementById('accessOverlay').setAttribute('aria-hidden', 'true');
+            pendingCourseId = null;
+        }
+        document.getElementById('closeAccess').addEventListener('click', closeAccessPrompt);
+        document.getElementById('accessOverlay').addEventListener('click', event => { if (event.target.id === 'accessOverlay') closeAccessPrompt(); });
+        document.getElementById('payCourseButton').addEventListener('click', async () => {
+            if (!pendingCourseId) return;
+            const status = document.getElementById('accessStatus');
+            status.textContent = 'Connecting to Paytm…';
+            try {
+                const payment = await apiRequest(`/api/billing/course/${pendingCourseId}/start`, { method: 'POST' });
+                if (payment.unlocked) { unlockedCourses.add(pendingCourseId); closeAccessPrompt(); openCourse(pendingCourseId); return; }
+                status.textContent = 'Paytm checkout is ready. Complete payment, then refresh your dashboard.';
+                const script = document.createElement('script');
+                script.src = `https://securegw.paytm.in/merchantpgpui/checkoutjs/merchants/${encodeURIComponent(payment.mid)}.js`;
+                script.onload = () => window.Paytm?.CheckoutJS?.init({ root: '', flow: 'DEFAULT', data: { orderId: payment.order_id, token: payment.txn_token, tokenType: 'TXN_TOKEN', amount: payment.amount, mid: payment.mid } }).then(() => window.Paytm.CheckoutJS.invoke());
+                document.head.appendChild(script);
+            } catch (error) { status.textContent = error.message; }
+        });
 
         function setView(view) {
             if (overlay.classList.contains('open')) closeCourse();
@@ -1396,8 +1452,10 @@
                 sessionUser = payload.user;
                 updateProfile(sessionUser);
                 if (sessionUser) {
-                const saved = await apiRequest('/api/progress');
+                    const saved = await apiRequest('/api/progress');
                     saved.progress.forEach(item => completedRooms.add(`${item.course_id}-${item.room_index}`));
+                    const access = await apiRequest('/api/billing/access');
+                    access.unlocked_courses.forEach(courseId => unlockedCourses.add(courseId));
                     renderDashboard();
                     if (sessionUser.role === 'admin') { loadAdminUsers(); loadAdminCourses(); loadAdminStudio(); }
                 }
@@ -1405,6 +1463,7 @@
             } catch (error) {
                 updateProfile(null);
                 sessionUser = null;
+                unlockedCourses.clear();
                 renderDashboard();
             }
         }
@@ -1413,6 +1472,7 @@
             try { await apiRequest('/api/auth/logout', { method: 'POST' }); } catch (error) { showToast(error.message); return; }
             sessionUser = null;
             completedRooms.clear();
+            unlockedCourses.clear();
             updateProfile(null);
             renderDashboard();
             showToast('Signed out securely');
@@ -1519,7 +1579,6 @@
             ['adminModuleTitle', 'adminModuleTime', 'adminModuleExplain', 'adminModuleCode', 'adminModuleTask', 'adminModuleObjective', 'adminModuleOutcome', 'adminModuleSteps', 'adminModuleQuestion', 'adminModuleAnswer', 'adminModuleAnswers', 'adminModuleHint'].forEach(id => setAdminInput(id, ''));
             setAdminInput('adminModuleTime', '15 MIN');
             document.getElementById('adminModuleQuestionType').value = 'choice';
-            document.getElementById('adminModuleGameMode').value = 'duel';
             document.getElementById('adminModuleFeedback').textContent = 'NEW MODULE';
         }
         function fillAdminModule(module) {
@@ -1538,7 +1597,6 @@
             setAdminInput('adminModuleAnswers', (module.answers || []).join('\n'));
             setAdminInput('adminModuleHint', module.hint);
             document.getElementById('adminModuleQuestionType').value = module.question_type || 'choice';
-            document.getElementById('adminModuleGameMode').value = module.game_mode || 'duel';
             document.getElementById('adminModuleFeedback').textContent = `MODULE #${module.id}`;
         }
         function fillAdminCourse(courseId) {
@@ -1583,7 +1641,7 @@
             return { id: document.getElementById('adminCourseId').value.trim(), name: document.getElementById('adminCourseName').value.trim(), description: document.getElementById('adminCourseDescription').value.trim(), tone: document.getElementById('adminCourseTone').value.trim(), level: document.getElementById('adminCourseLevel').value.trim(), video: document.getElementById('adminCourseVideo').value.trim(), videoTitle: document.getElementById('adminCourseVideoTitle').value.trim(), web: document.getElementById('adminCourseWeb').value.trim(), webTitle: document.getElementById('adminCourseWebTitle').value.trim(), published: document.getElementById('adminCoursePublished').checked };
         }
         function adminModuleBody() {
-            return { title: document.getElementById('adminModuleTitle').value.trim(), time: document.getElementById('adminModuleTime').value.trim(), explain: document.getElementById('adminModuleExplain').value.trim(), code: document.getElementById('adminModuleCode').value, task: document.getElementById('adminModuleTask').value.trim(), objective: document.getElementById('adminModuleObjective').value.trim(), outcome: document.getElementById('adminModuleOutcome').value.trim(), steps: document.getElementById('adminModuleSteps').value.split('\n').map(item => item.trim()).filter(Boolean), question: document.getElementById('adminModuleQuestion').value.trim(), answer: document.getElementById('adminModuleAnswer').value.trim(), answers: document.getElementById('adminModuleAnswers').value.split('\n').map(item => item.trim()).filter(Boolean), hint: document.getElementById('adminModuleHint').value.trim(), question_type: document.getElementById('adminModuleQuestionType').value, game_mode: document.getElementById('adminModuleGameMode').value };
+            return { title: document.getElementById('adminModuleTitle').value.trim(), time: document.getElementById('adminModuleTime').value.trim(), explain: document.getElementById('adminModuleExplain').value.trim(), code: document.getElementById('adminModuleCode').value, task: document.getElementById('adminModuleTask').value.trim(), objective: document.getElementById('adminModuleObjective').value.trim(), outcome: document.getElementById('adminModuleOutcome').value.trim(), steps: document.getElementById('adminModuleSteps').value.split('\n').map(item => item.trim()).filter(Boolean), question: document.getElementById('adminModuleQuestion').value.trim(), answer: document.getElementById('adminModuleAnswer').value.trim(), answers: document.getElementById('adminModuleAnswers').value.split('\n').map(item => item.trim()).filter(Boolean), hint: document.getElementById('adminModuleHint').value.trim(), question_type: document.getElementById('adminModuleQuestionType').value };
         }
         document.getElementById('adminModuleSelect').addEventListener('change', event => { const course = adminCatalog.find(item => item.id === adminSelectedCourseId); fillAdminModule(course?.modules.find(module => String(module.id) === event.target.value)); });
         document.getElementById('newAdminCourse').addEventListener('click', () => {
