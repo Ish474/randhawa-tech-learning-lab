@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: randhawa-tech-learning-lab
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 2 --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /health
+    disk:
+      name: randhawa-data
+      mountPath: /opt/render/project/src/instance
+      sizeGB: 1
+    envVars:
+      - key: NULLSPACE_SECRET_KEY
+        sync: false
+      - key: MASTER_ADMIN_EMAIL
+        sync: false
+      - key: MASTER_ADMIN_PASSWORD
+        sync: false
+      - key: NULLSPACE_COOKIE_SECURE
+        value: "1"
+      - key: NULLSPACE_HOST
+        value: 0.0.0.0
+      - key: OTP_DEV_MODE
+        value: "0"
+      - key: OTP_SMTP_HOST
+        value: smtp.gmail.com
+      - key: OTP_SMTP_PORT
+        value: "587"
+      - key: OTP_SMTP_TLS
+        value: "1"
+      - key: OTP_SMTP_USER
+        sync: false
+      - key: OTP_SMTP_PASSWORD
+        sync: false
+      - key: OTP_SMTP_FROM
+        sync: false
