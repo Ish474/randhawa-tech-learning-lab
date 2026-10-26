@@ -319,7 +319,7 @@
         .assistant-form { display: flex; gap: 6px; }
         .assistant-form input { min-width: 0; flex: 1; padding: 9px; color: var(--ink); background: #091019; border: 1px solid var(--line); border-radius: 4px; outline: 0; font: 10px var(--mono); }
         .assistant-form button { color: var(--cyan); background: transparent; border: 1px solid rgba(114,228,213,.35); border-radius: 4px; font: 9px var(--mono); }
-        .auth-overlay, .game-overlay { position: fixed; inset: 0; z-index: 13; display: none; place-items: center; padding: 20px; background: rgba(3,5,9,.8); backdrop-filter: blur(8px); }
+        .auth-overlay { position: fixed; inset: 0; z-index: 13; display: none; place-items: center; padding: 20px; background: rgba(3,5,9,.8); backdrop-filter: blur(8px); }
         .otp-actions { display: grid; grid-template-columns: 1fr auto; gap: 7px; align-items: end; }
         .otp-actions button { padding: 10px 11px; color: #fff; background: #596fdb; border: 0; border-radius: 9px; font: 800 9px var(--sans); cursor: pointer; }
         .otp-status { grid-column: 1 / -1; color: #6b7b90; font: 9px var(--mono); }
@@ -330,9 +330,9 @@
         .user-actions { display: flex; gap: 5px; margin-left: auto; }
         .user-actions button { padding: 5px 7px; color: #596fdb; background: #edf0ff; border: 0; border-radius: 6px; font: 800 8px var(--mono); cursor: pointer; }
         .user-actions button.danger { color: #c54d4d; background: #fff0ef; }
-        .auth-overlay.open, .game-overlay.open { display: grid; }
-        .auth-card, .game-card { width: min(440px, 100%); padding: 25px; background: #111a27; border: 1px solid rgba(114,228,213,.28); border-radius: 8px; box-shadow: 0 20px 80px rgba(0,0,0,.45); }
-        .auth-card h2, .game-card h2 { margin-top: 9px; font-size: 25px; letter-spacing: -.05em; }
+        .auth-overlay.open { display: grid; }
+        .auth-card { width: min(440px, 100%); padding: 25px; background: #111a27; border: 1px solid rgba(114,228,213,.28); border-radius: 8px; box-shadow: 0 20px 80px rgba(0,0,0,.45); }
+        .auth-card h2 { margin-top: 9px; font-size: 25px; letter-spacing: -.05em; }
         .auth-tabs { display: flex; gap: 7px; margin-top: 19px; }
         .auth-tab { flex: 1; padding: 9px; color: #748196; background: transparent; border: 1px solid var(--line); border-radius: 4px; font: 9px var(--mono); }
         .auth-tab.active { color: var(--cyan); background: rgba(114,228,213,.08); border-color: rgba(114,228,213,.3); }
@@ -689,14 +689,14 @@
             <div class="content">
                 <section class="view active" id="dashboard">
                     <div class="page-heading">
-                        <div><p class="eyebrow">Sunday, 25 October 2026</p><h1>Welcome back, Ishaan.</h1><p class="heading-note">Your next exploit is closer than you think.</p></div>
-                        <div class="heading-right"><span class="date-pill">STREAK: 07 DAYS</span><button class="outline-button" id="dailyBriefing" type="button">Daily briefing <span>↗</span></button></div>
+                        <div><p class="eyebrow" id="dashboardDate">LEARNING LAB</p><h1 id="dashboardGreeting">Welcome to Randhawa's Tech Learning Lab.</h1><p class="heading-note" id="dashboardNote">Sign in to save progress and personalize your learning path.</p></div>
+                        <div class="heading-right"><span class="date-pill" id="dashboardStreak">SIGN IN TO START</span><button class="outline-button" id="dailyBriefing" type="button">Daily briefing <span>↗</span></button></div>
                     </div>
                     <div class="dashboard-grid">
                         <article class="panel hero-card">
-                            <div class="hero-content"><span class="hero-kicker">Continue your path / 03.04</span><h2>Think like a builder.<br><em>Break like a hacker.</em></h2><p>Complete the fundamentals of web exploitation and unlock your first live-fire room in the arena.</p><div class="hero-bottom"><button class="primary-button" id="continueButton">Continue learning <span>→</span></button><div class="hero-stats"><div class="hero-stat"><strong>04:20</strong><span>EST. TIME LEFT</span></div><div class="hero-stat"><strong>+240 XP</strong><span>REWARD</span></div></div></div></div>
+                            <div class="hero-content"><span class="hero-kicker" id="dashboardHeroKicker">YOUR LEARNING PATH</span><h2 id="dashboardHeroTitle">Build a useful skill.<br><em>One room at a time.</em></h2><p id="dashboardHeroCopy">Open a course, study the example, and complete a guided room at your own pace.</p><div class="hero-bottom"><button class="primary-button" id="continueButton">Sign in to begin <span>→</span></button><div class="hero-stats"><div class="hero-stat"><strong id="dashboardCompleted">0</strong><span>ROOMS COMPLETE</span></div><div class="hero-stat"><strong id="dashboardXp">0 XP</strong><span>YOUR XP</span></div></div></div></div>
                         </article>
-                        <article class="panel progress-card"><div class="panel-title"><span>Mission status</span><small>THIS WEEK</small></div><div class="radial-wrap"><div class="radial"><div class="radial-copy"><strong>68%</strong><span>COMPLETE</span></div></div><div class="progress-copy"><strong>Operator track</strong><span>3 modules remaining<br>to rank up</span></div></div><div class="streak"><div><span class="streak-label">CURRENT STREAK</span><strong>07 days</strong></div><div class="bars" aria-label="Seven day activity"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></article>
+                        <article class="panel progress-card"><div class="panel-title"><span>Mission status</span><small id="dashboardStatusLabel">YOUR PATH</small></div><div class="radial-wrap"><div class="radial"><div class="radial-copy"><strong id="dashboardProgress">0%</strong><span>COMPLETE</span></div></div><div class="progress-copy"><strong id="dashboardTrackTitle">Learning track</strong><span id="dashboardRemaining">Sign in to track your rooms</span></div></div><div class="streak"><div><span class="streak-label">CURRENT STREAK</span><strong id="dashboardStreakDays">0 days</strong></div><div class="bars" aria-label="Learning activity"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></article>
                     </div>
                     <div class="section-row"><h2>Explore the stack</h2><a href="#paths" data-view-link="paths">View all paths ↗</a></div>
                     <div class="tracks">
@@ -787,37 +787,6 @@
     </div>
     <div class="assistant-widget" id="assistantWidget"><div class="assistant-panel" id="assistantPanel"><div class="assistant-head"><strong>Nova / learning assistant</strong><span>LOCAL GUIDE</span></div><div class="assistant-messages" id="assistantMessages"><div class="assistant-message">Ask me to explain the current room, give a hint, or suggest the next step. I use the lesson content already loaded in this page.</div></div><form class="assistant-form" id="assistantForm"><input id="assistantInput" type="text" placeholder="Ask about this room..." autocomplete="off"><button type="submit">send</button></form></div><button class="assistant-toggle" id="assistantToggle" type="button">Ask Nova</button></div>
     <div class="auth-overlay" id="authOverlay" aria-hidden="true"><article class="auth-card"><button class="auth-close" id="closeAuth" type="button" aria-label="Close sign in">×</button><p class="eyebrow">Randhawa's identity / secure access</p><h2>Enter the operator network.</h2><div class="auth-tabs"><button class="auth-tab active" data-auth-tab="login" type="button">Sign in</button><button class="auth-tab" data-auth-tab="register" type="button">Create account</button></div><form class="auth-form" id="loginForm"><label>Email<input id="loginEmail" type="email" autocomplete="email" required></label><label>Password<div class="password-field"><input id="loginPassword" type="password" autocomplete="current-password" required><button type="button" data-toggle-password="loginPassword">Show</button></div></label><button class="primary-button" type="submit">Sign in →</button></form><form class="auth-form" id="registerForm" style="display:none"><label>Username<input id="registerUsername" type="text" autocomplete="username" required></label><label>Email<input id="registerEmail" type="email" autocomplete="email" required></label><div class="otp-actions"><label>Email code<input id="registerEmailOtp" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><button id="requestEmailOtp" type="button">Send code</button><span class="otp-status" id="emailOtpStatus"></span></div><label>Password<div class="password-field"><input id="registerPassword" type="password" autocomplete="new-password" minlength="10" required><button type="button" data-toggle-password="registerPassword">Show</button></div></label><button class="primary-button" type="submit">Create operator →</button></form><div class="auth-status" id="authStatus"></div></article></div>
-    <div class="game-overlay" id="gameOverlay" aria-hidden="true">
-        <article class="game-card" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
-            <div class="game-shell">
-                <div class="game-topbar">
-                    <div class="game-brand"><span class="game-brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.2 4.7 5.1.7-3.7 3.6.9 5.1-4.5-2.4-4.5 2.4.9-5.1-3.7-3.6 5.1-.7L12 3Z"/></svg></span><span>Signal Safari</span></div>
-                     <div class="game-top-actions"><select class="game-mode-select" id="gameModeChoice" aria-label="Choose game mode"><option value="mixed">Mixed modes</option><option value="duel">Duel</option><option value="boss">Boss battle</option><option value="race">Speed race</option><option value="defense">Base defense</option></select><div class="game-progress" aria-label="Quest progress"><i id="gameProgressBar"></i></div><button class="game-close" id="closeGame" type="button" aria-label="Close game">×</button></div>
-                </div>
-                <div class="game-board">
-                    <section class="game-scene" aria-label="Game scene">
-                        <span class="scene-cloud one"></span><span class="scene-cloud two"></span>
-                        <div class="game-question"><span class="game-kicker" id="gameKicker">MISSION 01 / SIGNAL SORT</span><h2 id="gameTitle">Catch the right concept.</h2><p id="gameDescription">Drag the answer card into the glowing slot before the signal moves on.</p></div>
-                        <div class="battle-hud"><div class="battle-health"><div><span>YOU</span><span id="playerHealthValue">100</span></div><div class="health-track"><i id="playerHealth"></i></div></div><span class="battle-vs" id="gameModeBadge">DUEL</span><div class="battle-health"><div><span id="enemyName">BYTE BEAST</span><span id="enemyHealthValue">100</span></div><div class="health-track enemy"><i id="enemyHealth"></i></div></div></div>
-                        <div class="scene-hills"></div><div class="scene-track"></div>
-                        <div class="game-hero" aria-hidden="true"><div class="hero-shadow"></div><div class="hero-head"><span class="hero-face"></span></div><div class="hero-body"><span class="hero-badge">✦</span></div></div>
-                        <div class="battle-enemy" id="gameEnemy" aria-hidden="true"><div class="enemy-shadow"></div><div class="enemy-body"><span class="enemy-face"></span></div><span class="enemy-name" id="gameEnemyName">Byte Beast</span></div>
-                        <div class="game-win" id="gameWin"><div class="win-icon">★</div><h3>Signal secured!</h3><p>You made five clean choices and powered up your learning path.</p><strong id="gameWinXp">+000 XP</strong></div>
-                    </section>
-                    <section class="game-controls">
-                        <div>
-                            <div class="game-controls-head"><h3 id="gamePrompt">Complete the line</h3><span class="game-score" id="gameScore">000 XP</span></div>
-                            <div class="game-code" id="gameCode"><span class="code-soft">choose: </span><span class="answer-slot" id="gameSlot" tabindex="0">drop here</span></div>
-                            <p class="game-instruction">Tap an answer to strike, or drag it into the glowing slot.</p>
-                            <div class="game-choices" id="gameChoices"></div>
-                            <div class="game-feedback" id="gameFeedback" role="status">Your guide is waiting for the first move.</div>
-                        </div>
-                        <div class="game-footer"><span class="game-status" id="gameStatus">QUEST ACTIVE</span><button class="game-finish" id="finishGame" type="button">Claim XP →</button></div>
-                    </section>
-                </div>
-            </div>
-        </article>
-    </div>
     <div class="toast" id="toast" role="status"></div>
     <script>
         const toast = document.getElementById('toast');
@@ -1012,6 +981,29 @@
         let activeLesson = 0;
         const completedRooms = new Set();
 
+        function renderDashboard() {
+            const user = sessionUser;
+            const date = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()).toUpperCase();
+            const totalRooms = Object.values(courses).reduce((total, course) => total + (course.modules?.length || 0), 0);
+            const completed = user ? completedRooms.size : 0;
+            const percent = totalRooms ? Math.round((completed / totalRooms) * 100) : 0;
+            document.getElementById('dashboardDate').textContent = user ? date : 'RANDHAWA\'S TECH LEARNING LAB';
+            document.getElementById('dashboardGreeting').textContent = user ? `Welcome back, ${user.username}.` : "Welcome to Randhawa's Tech Learning Lab.";
+            document.getElementById('dashboardNote').textContent = user ? 'Your learning path is saved to your account and ready for the next room.' : 'Sign in to save progress and personalize your learning path.';
+            document.getElementById('dashboardStreak').textContent = user ? `${completed ? 'ACTIVE' : 'NEW'} / ${completed} ROOMS` : 'SIGN IN TO START';
+            document.getElementById('dashboardHeroKicker').textContent = user ? 'CONTINUE YOUR PATH' : 'YOUR LEARNING PATH';
+            document.getElementById('dashboardHeroCopy').textContent = user ? 'Pick up where you left off with a guided room, a clear explanation, and a practical checkpoint.' : 'Open a course, study the example, and complete a guided room at your own pace.';
+            document.getElementById('dashboardCompleted').textContent = completed;
+            document.getElementById('dashboardXp').textContent = `${user?.xp || 0} XP`;
+            document.getElementById('dashboardProgress').textContent = `${percent}%`;
+            document.getElementById('dashboardRemaining').innerHTML = user ? `${Math.max(0, totalRooms - completed)} rooms remaining<br>across your paths` : 'Sign in to track your rooms';
+            document.getElementById('dashboardStreakDays').textContent = user ? `${completed ? Math.min(completed, 7) : 0} days` : '0 days';
+            const firstIncomplete = user ? Object.entries(courses).flatMap(([id, course]) => course.modules.map((_, index) => [id, index])).find(([id, index]) => !completedRooms.has(`${id}-${index}`)) : null;
+            const continueButton = document.getElementById('continueButton');
+            continueButton.innerHTML = user ? 'Continue learning <span>→</span>' : 'Sign in to begin <span>→</span>';
+            continueButton.onclick = () => user && firstIncomplete ? openCourse(firstIncomplete[0], true, firstIncomplete[1]) : openAuth();
+        }
+
         function escapeHtml(value) {
             return String(value).replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
         }
@@ -1086,7 +1078,7 @@
                     <a class="resource-link" href="${course.video}" target="_blank" rel="noopener"><span>${escapeHtml(course.videoTitle)}</span><b class="resource-type">YouTube ↗</b></a>
                     <a class="resource-link" href="${course.web}" target="_blank" rel="noopener"><span>${escapeHtml(course.webTitle)}</span><b class="resource-type">Web guide ↗</b></a>
                 </div>
-                <div class="drawer-actions"><button class="secondary-button${completedRooms.has(roomKey) ? ' room-complete' : ''}" type="button" id="markLesson">${completedRooms.has(roomKey) ? 'Room completed' : 'Mark room complete'}</button><button class="secondary-button" type="button" id="resetLesson">Reset progress</button><button class="secondary-button" type="button" id="playRoomGame">Play quest →</button><button class="primary-button" type="button" id="nextLesson">${index === course.modules.length - 1 ? 'Finish path' : 'Next module →'}</button></div>`;
+                <div class="drawer-actions"><button class="secondary-button${completedRooms.has(roomKey) ? ' room-complete' : ''}" type="button" id="markLesson">${completedRooms.has(roomKey) ? 'Room completed' : 'Mark room complete'}</button><button class="secondary-button" type="button" id="resetLesson">Reset progress</button><button class="primary-button" type="button" id="nextLesson">${index === course.modules.length - 1 ? 'Finish path' : 'Next module →'}</button></div>`;
             lessonList.querySelectorAll('[data-lesson-index]').forEach(item => item.addEventListener('click', () => renderLesson(course, Number(item.dataset.lessonIndex))));
             document.getElementById('showHint').addEventListener('click', () => document.getElementById('checkpointHint').classList.toggle('show'));
             document.getElementById('checkCheckpoint').addEventListener('click', () => {
@@ -1107,7 +1099,6 @@
                 renderLesson(course, index);
                 showToast(`Room ${String(index + 1).padStart(2, '0')} progress reset`);
             });
-            document.getElementById('playRoomGame').addEventListener('click', () => openGame(course, index));
             document.getElementById('nextLesson').addEventListener('click', () => {
                 if (index === course.modules.length - 1) { showToast(`${course.name} starter path complete`); return; }
                 renderLesson(course, index + 1);
@@ -1185,7 +1176,6 @@
         document.querySelectorAll('[data-toast]').forEach(item => item.addEventListener('click', () => {
             if (!item.classList.contains('challenge-row')) showToast(item.dataset.toast);
         }));
-        document.getElementById('continueButton').addEventListener('click', () => openCourse('web', true, 1));
         document.querySelector('[data-toast="Arena matchmaking is ready."]')?.addEventListener('click', () => setView('arena'));
         document.querySelector('[data-toast="Sandbox instance NS-042 is already warm."]')?.addEventListener('click', () => setView('sandbox'));
         document.querySelector('[data-toast="You are currently ranked #248."]')?.addEventListener('click', () => setView('leaderboard'));
@@ -1406,12 +1396,16 @@
                 sessionUser = payload.user;
                 updateProfile(sessionUser);
                 if (sessionUser) {
-                    const saved = await apiRequest('/api/progress');
+                const saved = await apiRequest('/api/progress');
                     saved.progress.forEach(item => completedRooms.add(`${item.course_id}-${item.room_index}`));
+                    renderDashboard();
                     if (sessionUser.role === 'admin') { loadAdminUsers(); loadAdminCourses(); loadAdminStudio(); }
                 }
+                else renderDashboard();
             } catch (error) {
                 updateProfile(null);
+                sessionUser = null;
+                renderDashboard();
             }
         }
         document.getElementById('profileButton').addEventListener('click', () => sessionUser ? showToast(`${sessionUser.username} / ${sessionUser.role}`) : openAuth());
@@ -1420,6 +1414,7 @@
             sessionUser = null;
             completedRooms.clear();
             updateProfile(null);
+            renderDashboard();
             showToast('Signed out securely');
         }
         document.getElementById('logoutNav').addEventListener('click', logoutSession);
@@ -1509,7 +1504,8 @@
                 const payload = await apiRequest('/api/courses');
                 payload.courses.forEach(mergeCourse);
                 renderCourseLibrary();
-            } catch (error) { /* The built-in content remains available offline. */ }
+                renderDashboard();
+            } catch (error) { renderDashboard(); }
         }
         function renderAdminCourseList() {
             const list = document.getElementById('adminCourseList');
@@ -1943,28 +1939,6 @@
             battleAnimation('enemy-hit');
             setTimeout(advanceGameRound, 650);
         }
-        document.getElementById('closeGame').addEventListener('click', () => { document.getElementById('gameOverlay').classList.remove('open'); document.getElementById('gameOverlay').setAttribute('aria-hidden', 'true'); gameState = null; });
-        document.getElementById('gameModeChoice').addEventListener('change', event => {
-            const mode = event.target.value;
-            localStorage.setItem('preferredGameMode', mode);
-            if (!gameState) return;
-            gameState.questions.forEach(question => { question.mode = mode === 'mixed' ? question.baseMode : mode; });
-            renderGame();
-        });
-        document.getElementById('finishGame').addEventListener('click', async () => {
-            if (!gameState) return;
-            completedRooms.add(`${gameState.course.id}-${gameState.index}`);
-            await saveProgress(gameState.course.id, gameState.index);
-            if (sessionUser) {
-                try { const result = await apiRequest('/api/game/complete', { method: 'POST', body: JSON.stringify({ course_id: gameState.course.id, room_index: gameState.index, score: gameState.xp }) }); sessionUser = result.user; updateProfile(sessionUser); } catch (error) { showToast(error.message); }
-            }
-            document.getElementById('gameOverlay').classList.remove('open');
-            document.getElementById('gameOverlay').setAttribute('aria-hidden', 'true');
-            showToast(`Quest complete: +${gameState.xp} XP`);
-            gameState = null;
-        });
-        document.getElementById('gameOverlay').addEventListener('click', event => { if (event.target.id === 'gameOverlay') document.getElementById('closeGame').click(); });
-
         function performSearch() {
             const input = document.getElementById('searchInput');
             const query = input.value.toLowerCase().trim();
