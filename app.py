@@ -334,7 +334,7 @@ def seed_default_courses(connection):
             connection.execute(
                 """INSERT INTO modules
                 (course_id, title, time, explain, code, task, objective, outcome, steps_json, question, answer, answers_json, hint, question_type, game_mode, sort_order, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     course["id"], title, "15 MIN", explain, code, task,
                     question, answer, json.dumps(["Read the objective.", "Study the example.", "Try the task."]),
