@@ -299,6 +299,7 @@ def initialize_database():
             title TEXT NOT NULL,
             time TEXT NOT NULL DEFAULT '15 MIN',
             explain TEXT NOT NULL,
+            scenario TEXT NOT NULL DEFAULT '',
             code TEXT NOT NULL DEFAULT '',
             task TEXT NOT NULL DEFAULT '',
             objective TEXT NOT NULL DEFAULT '',
@@ -372,6 +373,8 @@ def initialize_database():
     if "active" not in user_columns:
         connection.execute("ALTER TABLE users ADD COLUMN active INTEGER NOT NULL DEFAULT 1")
     module_columns = {row["name"] for row in connection.execute("PRAGMA table_info(modules)").fetchall()}
+    if "scenario" not in module_columns:
+        connection.execute("ALTER TABLE modules ADD COLUMN scenario TEXT NOT NULL DEFAULT ''")
     if "question_type" not in module_columns:
         connection.execute("ALTER TABLE modules ADD COLUMN question_type TEXT NOT NULL DEFAULT 'choice'")
     admin_email = os.getenv("MASTER_ADMIN_EMAIL", "").strip().lower()
@@ -387,6 +390,7 @@ def initialize_database():
             )
     seed_default_courses(connection)
     expand_default_courses(connection)
+    backfill_module_scenarios(connection)
     for key, value in DEFAULT_SETTINGS.items():
         connection.execute(
             "INSERT OR IGNORE INTO site_settings (key, value, updated_at) VALUES (?, ?, ?)",
@@ -440,16 +444,29 @@ def expand_default_courses(connection):
             now = utc_now()
             connection.execute(
                 """INSERT INTO modules
-                (course_id, title, time, explain, code, task, objective, outcome, steps_json, question, answer, answers_json, hint, question_type, game_mode, sort_order, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (course_id, title, time, explain, scenario, code, task, objective, outcome, steps_json, question, answer, answers_json, hint, question_type, game_mode, sort_order, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
-                    course_id, module["title"], module["time"], module["explain"], module["code"], module["task"],
+                    course_id, module["title"], module["time"], module["explain"], module.get("scenario", default_scenario(course_id, module["title"], module["task"])), module["code"], module["task"],
                     module["objective"], module["outcome"], json.dumps(module["steps"]), module["question"], module["answer"],
                     json.dumps(module["answers"]), module["hint"], module.get("question_type", ["choice", "code", "sequence", "debug", "match"][offset % 5]),
                     ["duel", "boss", "race", "defense", "duel"][offset % 5], next_order, now, now,
                 ),
             )
             next_order += 1
+
+
+def default_scenario(course_id, title, task):
+    course_names = {"python": "Python automation", "web": "a web project", "linux": "a Linux workstation", "security": "a safe security lab", "java": "a Java service", "reverse": "a C or C++ program"}
+    context = course_names.get(course_id, "a small software project")
+    action = task.rstrip(".")
+    return f"You are working on {context}. A teammate asks you to {action.lower()}. Make the smallest safe change, observe what happens, and explain why the result is correct."
+
+
+def backfill_module_scenarios(connection):
+    rows = connection.execute("SELECT id, course_id, title, task FROM modules WHERE scenario = '' OR scenario IS NULL").fetchall()
+    for row in rows:
+        connection.execute("UPDATE modules SET scenario = ? WHERE id = ?", (default_scenario(row["course_id"], row["title"], row["task"]), row["id"]))
 
 
 def current_user():
@@ -912,6 +929,7 @@ def course_payload(connection, course):
                 "title": module["title"],
                 "time": module["time"],
                 "explain": module["explain"],
+                "scenario": module["scenario"],
                 "code": module["code"],
                 "task": module["task"],
                 "objective": module["objective"],
@@ -1188,25 +1206,26 @@ def local_question_content(module, course_name):
     title = module.get("title", "this room")
     task = module.get("task", "complete the practice task")
     explanation = module.get("explain", "Use the example and objective to choose the strongest answer.")
+    scenario = module.get("scenario", "")
     answer = module.get("answer", "").strip()
     choices = decode_json_list(module.get("answers_json", "[]")) if "answers_json" in module else module.get("answers", [])
     choices = [str(choice).strip() for choice in choices if str(choice).strip()]
     steps = decode_json_list(module.get("steps_json", "[]")) if "steps_json" in module else module.get("steps", [])
     if module_type == "sequence":
-        question = f'Arrange the moves for "{title}" so the operator can complete the {course_name} mission.'
+        question = f'In this real-world scenario, arrange the moves for "{title}" so the operator can complete the {course_name} mission: {scenario}'
         choices = steps or choices
         hint = f"Start with the smallest setup move, then follow the example before the final task: {task}"
     elif module_type == "code":
-        question = f'Read the example in "{title}". Which choice best explains the code you are about to use?'
+        question = f'You are applying "{title}" in this real-world scenario: {scenario} Which choice best explains the code you are about to use?'
         hint = f"Look at the code and connect it to the room outcome: {module.get('outcome', title)}."
     elif module_type == "debug":
-        question = f'The "{title}" room has a bug in its first attempt while trying to {task.lower()} Which choice repairs the core idea?'
+        question = f'The "{title}" room has a bug in its first attempt while trying to {task.rstrip(".!?").lower()}. In this scenario, which choice repairs the core idea?'
         hint = f"Compare the failed assumption with the explanation: {explanation[:180]}"
     elif module_type == "match":
-        question = f'Which concept matches this explanation from "{title}": {explanation}'
+        question = f'Which concept matches this real-world explanation from "{title}": {explanation} Scenario: {scenario}'
         hint = f"Use the room objective and the example before choosing: {module.get('objective', task)}"
     else:
-        question = f'You are on the "{title}" mission. Which answer best proves the skill behind this task: {task}'
+        question = f'You are on the "{title}" mission. In this real-world scenario, which answer best proves the skill behind this task: {task} Scenario: {scenario}'
         hint = f"Use the room outcome and example: {module.get('outcome', explanation[:160])}"
     return {"question": question, "answer": answer, "answers": choices, "hint": hint}
 
@@ -1220,6 +1239,7 @@ def ai_question_content(module, course_name):
         "course": course_name,
         "module_title": module["title"],
         "module_explanation": module["explain"],
+        "real_world_scenario": module.get("scenario", ""),
         "example_code": module["code"],
         "practice_task": module["task"],
         "objective": module["objective"],

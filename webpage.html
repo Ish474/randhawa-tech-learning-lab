@@ -336,6 +336,9 @@
         .newcomer-card p { color: #8290a3; font-size: 11px; line-height: 1.6; }
         .contact-links { display: flex; flex-wrap: wrap; gap: 8px; }
         .contact-links a { padding: 9px 11px; color: #176e68; background: #e6faf6; border-radius: 8px; font: 800 9px var(--mono); }
+        .room-scenario { margin: 16px 0; padding: 13px 15px; color: #31516c; background: #eef7ff; border-left: 3px solid #61b8c9; border-radius: 8px; }
+        .room-scenario span { display: block; margin-bottom: 5px; color: #4b91a5; font: 800 9px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+        .room-scenario strong { display: block; font-size: 12px; line-height: 1.55; }
         .auth-overlay.open { display: grid; }
         .auth-card { width: min(440px, 100%); padding: 25px; background: #111a27; border: 1px solid rgba(114,228,213,.28); border-radius: 8px; box-shadow: 0 20px 80px rgba(0,0,0,.45); }
         .auth-card h2 { margin-top: 9px; font-size: 25px; letter-spacing: -.05em; }
@@ -1049,16 +1052,41 @@
         function getRoomData(course, index) {
             const lesson = course.modules[index] || {};
             const fallback = roomData[course.id]?.[index] || { objective: lesson.title || 'Practice the concept', outcome: lesson.outcome || lesson.title || 'Explain the concept clearly', steps: ['Read the objective.', 'Study the example.', 'Try the task.'], question: lesson.question || 'What is the key idea in this room?', answers: lesson.answers || [lesson.answer || 'yes'], answer: lesson.answer || 'That is the key idea.', hint: lesson.hint || 'Use the example and name the smallest useful observation.' };
+            const roomKey = `${course.id}-${index}`;
+            const taskText = (lesson.task || 'apply this room\'s idea').replace(/[.!?]+$/, '').toLowerCase();
+            const scenario = lesson.scenario || `You are working on a ${course.name} project. A teammate asks you to ${taskText}. Make the smallest safe change, observe the result, and explain why it works.`;
+            const baseQuestion = lesson.question || fallback.question;
+            const alternateQuestions = [
+                `Real-life check: ${baseQuestion} You are applying this in the scenario above.`,
+                `A teammate is blocked while trying to ${taskText}. What would you choose first?`,
+                `After studying ${lesson.title}, which answer would you give in a code review for this scenario?`,
+            ];
+            const question = sessionUser && completedRooms.has(roomKey) ? alternateQuestions[(sessionUser.id + index + course.id.length) % alternateQuestions.length] : baseQuestion;
             return {
                 ...fallback,
                 objective: lesson.objective || fallback.objective,
                 outcome: lesson.outcome || fallback.outcome,
                 steps: lesson.steps?.length ? lesson.steps : fallback.steps,
-                question: lesson.question || fallback.question,
+                scenario,
+                question,
                 answers: lesson.answers?.length ? lesson.answers : fallback.answers,
                 answer: lesson.answer || fallback.answer,
                 hint: lesson.hint || fallback.hint,
             };
+        }
+
+        async function completeRoom(course, index) {
+            const roomKey = `${course.id}-${index}`;
+            completedRooms.add(roomKey);
+            await saveProgress(course.id, index);
+            renderDashboard();
+            if (index < course.modules.length - 1) {
+                showToast(`Room ${String(index + 1).padStart(2, '0')} complete. Opening the next room.`);
+                renderLesson(course, index + 1);
+            } else {
+                showToast(`${course.name} path complete`);
+                renderLesson(course, index);
+            }
         }
 
         function renderLesson(course, index) {
@@ -1079,10 +1107,11 @@
                 </button>`).join('');
             const hindiResource = preferredLanguage === 'hi' ? `<a class="resource-link" href="${hindiRecommendations[course.id]}" target="_blank" rel="noopener"><span>Hindi audio/video recommendation</span><b class="resource-type">YouTube हिन्दी ↗</b></a>` : '';
             lessonDetail.innerHTML = `
-                <p class="eyebrow">Room ${String(index + 1).padStart(2, '0')} / Guided lab</p>
-                <h3>${escapeHtml(lesson.title)}</h3>
-                <p>${escapeHtml(lesson.explain)}</p>
-                <div class="room-objective"><div><span>Objective</span><strong>${escapeHtml(room.objective)}</strong></div><div><span>By the end</span><strong>${escapeHtml(room.outcome)}</strong></div></div>
+                 <p class="eyebrow">Room ${String(index + 1).padStart(2, '0')} / Guided lab</p>
+                 <h3>${escapeHtml(lesson.title)}</h3>
+                 <p>${escapeHtml(lesson.explain)}</p>
+                 <div class="room-scenario"><span>Real-life scenario</span><strong>${escapeHtml(room.scenario)}</strong></div>
+                 <div class="room-objective"><div><span>Objective</span><strong>${escapeHtml(room.objective)}</strong></div><div><span>By the end</span><strong>${escapeHtml(room.outcome)}</strong></div></div>
                  <h4>Learn first</h4>
                  <p>${escapeHtml(lesson.explain || teachingNotes[course.id]?.[index] || 'Read the room objective and connect it to the example.')}</p>
                 <h4>Room walkthrough</h4>
@@ -1101,19 +1130,15 @@
                 <div class="drawer-actions"><button class="secondary-button${completedRooms.has(roomKey) ? ' room-complete' : ''}" type="button" id="markLesson">${completedRooms.has(roomKey) ? 'Room completed' : 'Mark room complete'}</button><button class="secondary-button" type="button" id="resetLesson">Reset progress</button><button class="primary-button" type="button" id="nextLesson">${index === course.modules.length - 1 ? 'Finish path' : 'Next module →'}</button></div>`;
             lessonList.querySelectorAll('[data-lesson-index]').forEach(item => item.addEventListener('click', () => renderLesson(course, Number(item.dataset.lessonIndex))));
             document.getElementById('showHint').addEventListener('click', () => document.getElementById('checkpointHint').classList.toggle('show'));
-            document.getElementById('checkCheckpoint').addEventListener('click', () => {
+            document.getElementById('checkCheckpoint').addEventListener('click', async () => {
                 const value = document.getElementById('checkpointInput').value.trim().toLowerCase();
                 const feedback = document.getElementById('checkpointFeedback');
                 const correct = value && room.answers.some(answer => value.includes(answer.toLowerCase()));
                 feedback.textContent = correct ? room.answer : 'Not quite. Read the example again, then try once more.';
                 feedback.className = `checkpoint-feedback ${correct ? 'good' : 'bad'}`;
+                if (correct && !completedRooms.has(roomKey)) await completeRoom(course, index);
             });
-            document.getElementById('markLesson').addEventListener('click', () => {
-                completedRooms.add(roomKey);
-                saveProgress(course.id, index);
-                renderLesson(course, index);
-                showToast(`Room ${String(index + 1).padStart(2, '0')} completed`);
-            });
+            document.getElementById('markLesson').addEventListener('click', () => completeRoom(course, index));
             document.getElementById('resetLesson').addEventListener('click', () => {
                 completedRooms.delete(roomKey);
                 renderLesson(course, index);
